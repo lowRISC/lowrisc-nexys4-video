@@ -142,7 +142,7 @@ $(bitstream): $(lowrisc_srcs)  $(lowrisc_headers) $(verilog_srcs) $(verilog_head
 	$(VIVADO) -mode batch -source ../../common/script/make_bitstream.tcl -tclargs $(project_name)
 
 program: $(bitstream)
-	$(VIVADO) -mode batch -source ../../common/script/program.tcl -tclargs "xc7a100t_0" $(bitstream)
+	$(VIVADO) -mode batch -source script/fprogram.tcl -tclargs $(bitstream)
 
 .PHONY: project vivado bitstream program
 
@@ -195,7 +195,7 @@ $(project_name)/$(project_name).runs/impl_1/chip_top.new.bit: $(boot_mem) src/bo
 	data2mem -bm $(boot_mem) -bd $< -bt $(bitstream) -o b $@
 
 program-updated: $(project_name)/$(project_name).runs/impl_1/chip_top.new.bit
-	$(VIVADO) -mode batch -source ../../common/script/program.tcl -tclargs "xc7a100t_0" $(project_name)/$(project_name).runs/impl_1/chip_top.new.bit
+	$(VIVADO) -mode batch -source script/fprogram.tcl -tclargs $(project_name)/$(project_name).runs/impl_1/chip_top.new.bit
 
 .PHONY: search-ramb bit-update program-updated
 
