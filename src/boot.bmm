@@ -1,20 +1,20 @@
 ADDRESS_SPACE BOOTRAM RAMB32 [0x00000000:0x0000ffff]
   BUS_BLOCK
-    ram_reg_15 [127:120] LOC = X8Y13;
-    ram_reg_14 [119:112] LOC = X7Y11;
-    ram_reg_13 [111:104] LOC = X7Y7;
-    ram_reg_12 [103:96] LOC = X8Y8;
-    ram_reg_11 [95:88] LOC = X8Y11;
-    ram_reg_10 [87:80] LOC = X7Y9;
-    ram_reg_9 [79:72] LOC = X7Y5;
-    ram_reg_8 [71:64] LOC = X8Y9;
-    ram_reg_7 [63:56] LOC = X8Y14;
-    ram_reg_6 [55:48] LOC = X7Y12;
-    ram_reg_5 [47:40] LOC = X7Y6;
-    ram_reg_4 [39:32] LOC = X8Y7;
-    ram_reg_3 [31:24] LOC = X8Y12;
-    ram_reg_2 [23:16] LOC = X7Y10;
-    ram_reg_1 [15:8] LOC = X7Y8;
-    ram_reg_0 [7:0] LOC = X8Y6;
+    ram_reg_15 [127:120] LOC = X5Y12;
+    ram_reg_14 [119:112] LOC = X6Y14;
+    ram_reg_13 [111:104] LOC = X8Y20;
+    ram_reg_12 [103:96] LOC = X7Y11;
+    ram_reg_11 [95:88] LOC = X5Y15;
+    ram_reg_10 [87:80] LOC = X6Y12;
+    ram_reg_9 [79:72] LOC = X8Y18;
+    ram_reg_8 [71:64] LOC = X8Y11;
+    ram_reg_7 [63:56] LOC = X5Y13;
+    ram_reg_6 [55:48] LOC = X6Y15;
+    ram_reg_5 [47:40] LOC = X8Y21;
+    ram_reg_4 [39:32] LOC = X7Y12;
+    ram_reg_3 [31:24] LOC = X5Y14;
+    ram_reg_2 [23:16] LOC = X6Y13;
+    ram_reg_1 [15:8] LOC = X8Y19;
+    ram_reg_0 [7:0] LOC = X8Y12;
   END_BUS_BLOCK;
 END_ADDRESS_SPACE;
