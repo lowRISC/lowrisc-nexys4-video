@@ -17,11 +17,12 @@ generated_dir = $(abspath ./generated-src)
 
 glip_dir = $(base_dir)/opensocdebug/glip/src
 osd_dir = $(base_dir)/opensocdebug/hardware
+example_dir = $(base_dir)/fpga/bare_metal/examples
 
 project_name = lowrisc-chip-imp
 BACKEND ?= lowrisc_chip.LowRISCBackend
-#CONFIG ?= Nexys4DebugConfig
-CONFIG ?= Nexys4Config
+CONFIG ?= Nexys4DebugConfig
+#CONFIG ?= Nexys4Config
 
 VIVADO = vivado
 
@@ -44,6 +45,7 @@ lowrisc_headers = \
 verilog_srcs = \
 	$(osd_dir)/interfaces/common/dii_channel.sv \
 	$(base_dir)/src/main/verilog/chip_top.sv \
+	$(base_dir)/src/main/verilog/spi_wrapper.sv \
 	$(base_dir)/socip/nasti/channel.sv \
 	$(base_dir)/socip/nasti/lite_nasti_reader.sv \
 	$(base_dir)/socip/nasti/lite_nasti_writer.sv \
@@ -142,7 +144,7 @@ $(bitstream): $(lowrisc_srcs)  $(lowrisc_headers) $(verilog_srcs) $(verilog_head
 	$(VIVADO) -mode batch -source ../../common/script/make_bitstream.tcl -tclargs $(project_name)
 
 program: $(bitstream)
-	$(VIVADO) -mode batch -source script/fprogram.tcl -tclargs $(bitstream)
+	$(VIVADO) -mode batch -source ../../common/script/program.tcl -tclargs "xc7a100t_0" $(bitstream)
 
 .PHONY: project vivado bitstream program
 
@@ -195,7 +197,7 @@ $(project_name)/$(project_name).runs/impl_1/chip_top.new.bit: $(boot_mem) src/bo
 	data2mem -bm $(boot_mem) -bd $< -bt $(bitstream) -o b $@
 
 program-updated: $(project_name)/$(project_name).runs/impl_1/chip_top.new.bit
-	$(VIVADO) -mode batch -source script/fprogram.tcl -tclargs $(project_name)/$(project_name).runs/impl_1/chip_top.new.bit
+	$(VIVADO) -mode batch -source ../../common/script/program.tcl -tclargs "xc7a100t_0" $(project_name)/$(project_name).runs/impl_1/chip_top.new.bit
 
 .PHONY: search-ramb bit-update program-updated
 
@@ -203,22 +205,17 @@ program-updated: $(project_name)/$(project_name).runs/impl_1/chip_top.new.bit
 # Load examples
 #--------------------------------------------------------------------
 
-EXAMPLES = hello trace boot dram sdcard
+EXAMPLES = hello trace boot dram sdcard jump
 
-$(EXAMPLES):  $(lowrisc_headers)
-	$(MAKE) -C examples $@.hex
-	cp examples/$@.hex $(boot_mem) && make bit-update
+examples/Makefile:
+	-mkdir examples
+	ln -s $(example_dir)/Makefile examples/Makefile
+
+$(EXAMPLES):  $(lowrisc_headers) | examples/Makefile
+	FPGA_DIR=$(proj_dir) BASE_DIR=$(example_dir) $(MAKE) -C examples $@.hex
+	cp examples/$@.hex $(boot_mem) && $(MAKE) bit-update
 
 .PHONY: $(EXAMPLES)
-
-#--------------------------------------------------------------------
-# BBL
-#--------------------------------------------------------------------
-
-bbl:
-	cd bbl && make
-
-.PHONY: bbl
 
 #--------------------------------------------------------------------
 # Clean up
@@ -226,11 +223,11 @@ bbl:
 
 clean:
 	$(info To clean everything, including the Vivado project, use 'make cleanall')
-	rm -rf *.log *.jou $(junk)
+	-rm -rf *.log *.jou $(junk)
+	$(MAKE) -C examples clean
 
 cleanall: clean
-	rm -fr $(project_name)
-	cd examples && make clean
-	cd bbl && make clean
+	-rm -fr $(project)
+	-rm -fr $(project_name)
 
 .PHONY: clean cleanall

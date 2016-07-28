@@ -22,6 +22,7 @@ set_property PACKAGE_PIN W20 [get_ports spi_mosi]
 set_property IOSTANDARD LVCMOS33 [get_ports spi_mosi]
 set_property PACKAGE_PIN V19 [get_ports spi_miso]
 set_property IOSTANDARD LVCMOS33 [get_ports spi_miso]
+set_property -dict { PACKAGE_PIN V20   IOSTANDARD LVCMOS33 } [get_ports { sd_reset }]
 
 set_property CFGBVS VCCO [current_design]
 #where value1 is either VCCO or GND  

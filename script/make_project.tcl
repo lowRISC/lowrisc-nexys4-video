@@ -41,6 +41,7 @@ set files [list \
                [file normalize $origin_dir/generated-src/Top.$CONFIG.v] \
 	           [file normalize $osd_dir/interfaces/common/dii_channel.sv ] \
                [file normalize $base_dir/src/main/verilog/chip_top.sv] \
+               [file normalize $base_dir/src/main/verilog/spi_wrapper.sv] \
                [file normalize $base_dir/socip/nasti/channel.sv] \
                [file normalize $base_dir/socip/nasti/lite_nasti_reader.sv ] \
                [file normalize $base_dir/socip/nasti/lite_nasti_writer.sv ] \
@@ -211,8 +212,8 @@ set_property include_dirs [list \
                                [file normalize $proj_dir/$project_name.srcs/sources_1/ip/mig_7series_0/mig_7series_0/example_design/sim] \
                               ] $obj
 
-set_property verilog_define [list FPGA FPGA_FULL NEXYS4_VIDEO] $obj
-#set_property verilog_define [list FPGA] $obj
+#set_property verilog_define [list FPGA FPGA_FULL NEXYS4_VIDEO] $obj
+set_property verilog_define [list FPGA] $obj
 
 set_property -name {xsim.elaborate.xelab.more_options} -value {-cc gcc -sv_lib dpi} -objects $obj
 set_property "top" "tb" $obj
