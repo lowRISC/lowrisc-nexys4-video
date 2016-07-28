@@ -136,11 +136,11 @@ generate_target {instantiation_template} \
 # AXI clock converter due to the clock difference
 create_ip -name axi_clock_converter -vendor xilinx.com -library ip -version 2.1 -module_name axi_clock_converter_0
 set_property -dict [list \
-                        CONFIG.ADDR_WIDTH {30} \
+                        CONFIG.ADDR_WIDTH {32} \
                         CONFIG.DATA_WIDTH $mem_data_width \
                         CONFIG.ID_WIDTH $axi_id_width \
                         CONFIG.ACLK_ASYNC {0} \
-                        CONFIG.ACLK_RATIO {1:2}] \
+                        CONFIG.ACLK_RATIO {1:4}] \
     [get_ips axi_clock_converter_0]
 generate_target {instantiation_template} [get_files $proj_dir/$project_name.srcs/sources_1/ip/axi_clock_converter_0/axi_clock_converter_0.xci]
 
@@ -212,8 +212,8 @@ set_property include_dirs [list \
                                [file normalize $proj_dir/$project_name.srcs/sources_1/ip/mig_7series_0/mig_7series_0/example_design/sim] \
                               ] $obj
 
-#set_property verilog_define [list FPGA FPGA_FULL NEXYS4_VIDEO] $obj
-set_property verilog_define [list FPGA] $obj
+set_property verilog_define [list FPGA FPGA_FULL NEXYS4_VIDEO] $obj
+#set_property verilog_define [list FPGA] $obj
 
 set_property -name {xsim.elaborate.xelab.more_options} -value {-cc gcc -sv_lib dpi} -objects $obj
 set_property "top" "tb" $obj
