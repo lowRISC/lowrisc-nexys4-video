@@ -21,8 +21,8 @@ example_dir = $(base_dir)/fpga/bare_metal/examples
 
 project_name = lowrisc-chip-imp
 BACKEND ?= lowrisc_chip.LowRISCBackend
-#CONFIG ?= Nexys4VideoDebugConfig
-CONFIG ?= Nexys4VideoConfig
+CONFIG ?= Nexys4VideoDebugConfig
+#CONFIG ?= Nexys4VideoConfig
 
 VIVADO = vivado
 
@@ -56,6 +56,9 @@ verilog_srcs = \
 	$(base_dir)/socip/nasti/nasti_lite_bridge.sv \
 	$(base_dir)/socip/nasti/nasti_lite_reader.sv \
 	$(base_dir)/socip/nasti/nasti_lite_writer.sv \
+	$(base_dir)/socip/nasti/nasti_narrower.sv \
+	$(base_dir)/socip/nasti/nasti_narrower_reader.sv \
+	$(base_dir)/socip/nasti/nasti_narrower_writer.sv \
 	$(base_dir)/socip/nasti/nasti_mux.sv \
 	$(base_dir)/socip/nasti/nasti_slicer.sv \
 	$(base_dir)/socip/util/arbiter.sv \
@@ -205,7 +208,7 @@ program-updated: $(project_name)/$(project_name).runs/impl_1/chip_top.new.bit
 # Load examples
 #--------------------------------------------------------------------
 
-EXAMPLES = hello trace boot dram sdcard jump
+EXAMPLES = hello trace boot dram sdcard jump flash
 
 examples/Makefile:
 	-mkdir examples
