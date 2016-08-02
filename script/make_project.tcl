@@ -52,6 +52,9 @@ set files [list \
                [file normalize $base_dir/socip/nasti/nasti_lite_bridge.sv ] \
                [file normalize $base_dir/socip/nasti/nasti_lite_reader.sv ] \
                [file normalize $base_dir/socip/nasti/nasti_lite_writer.sv ] \
+               [file normalize $base_dir/socip/nasti/nasti_narrower.sv ] \
+               [file normalize $base_dir/socip/nasti/nasti_narrower_reader.sv ] \
+               [file normalize $base_dir/socip/nasti/nasti_narrower_writer.sv ] \
                [file normalize $base_dir/socip/nasti/nasti_mux.sv ] \
                [file normalize $base_dir/socip/nasti/nasti_slicer.sv ] \
                [file normalize $base_dir/socip/util/arbiter.sv ] \
@@ -116,13 +119,12 @@ generate_target {instantiation_template} \
 create_ip -name axi_bram_ctrl -vendor xilinx.com -library ip -module_name axi_bram_ctrl_0
 set_property -dict [list \
                         CONFIG.DATA_WIDTH $io_data_width \
-                        CONFIG.ID_WIDTH {0} \
+                        CONFIG.ID_WIDTH $axi_id_width \
                         CONFIG.MEM_DEPTH {16384} \
-                        CONFIG.PROTOCOL {AXI4LITE} \
+                        CONFIG.PROTOCOL {AXI4} \
                         CONFIG.BMG_INSTANCE {EXTERNAL} \
                         CONFIG.SINGLE_PORT_BRAM {1} \
-                        CONFIG.SUPPORTS_NARROW_BURST {0} \
-                        CONFIG.ECC_TYPE {0} \
+                        CONFIG.SUPPORTS_NARROW_BURST {1} \
                        ] [get_ips axi_bram_ctrl_0]
 generate_target {instantiation_template} \
     [get_files $proj_dir/$project_name.srcs/sources_1/ip/axi_bram_ctrl_0/axi_bram_ctrl_0.xci]
@@ -169,6 +171,20 @@ set_property -dict [list \
                         CONFIG.C_NUM_TRANSFER_BITS {8}] \
     [get_ips axi_quad_spi_0]
 generate_target {instantiation_template} [get_files $proj_dir/$project_name.srcs/sources_1/ip/axi_quad_spi_0/axi_quad_spi_0.xci]
+
+# Quad SPI interface for XIP SPI Flash
+create_ip -name axi_quad_spi -vendor xilinx.com -library ip -module_name axi_quad_spi_1
+set_property -dict [list \
+                        CONFIG.C_USE_STARTUP {1} \
+                        CONFIG.C_SPI_MEMORY {3} \
+                        CONFIG.C_SPI_MODE {2} \
+                        CONFIG.C_XIP_MODE {1} \
+                        CONFIG.C_SPI_MEM_ADDR_BITS {32} \
+                        CONFIG.C_S_AXI4_ID_WIDTH $axi_id_width \
+                        CONFIG.C_SCK_RATIO {2} \
+                        CONFIG.C_TYPE_OF_AXI4_INTERFACE {1}] \
+    [get_ips axi_quad_spi_1]
+generate_target {instantiation_template} [get_files $proj_dir/$project_name.srcs/sources_1/ip/axi_quad_spi_1/axi_quad_spi_1.xci]
 
 # Create 'constrs_1' fileset (if not found)
 if {[string equal [get_filesets -quiet constrs_1] ""]} {
