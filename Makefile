@@ -147,7 +147,7 @@ $(bitstream): $(lowrisc_srcs)  $(lowrisc_headers) $(verilog_srcs) $(verilog_head
 	$(VIVADO) -mode batch -source ../../common/script/make_bitstream.tcl -tclargs $(project_name)
 
 program: $(bitstream)
-	$(VIVADO) -mode batch -source ../../common/script/program.tcl -tclargs "xc7a100t_0" $(bitstream)
+	$(VIVADO) -mode batch -source ../../common/script/program.tcl -tclargs "xc7a200t_0" $(bitstream)
 
 .PHONY: project vivado bitstream program
 
@@ -200,7 +200,7 @@ $(project_name)/$(project_name).runs/impl_1/chip_top.new.bit: $(boot_mem) src/bo
 	data2mem -bm $(boot_mem) -bd $< -bt $(bitstream) -o b $@
 
 program-updated: $(project_name)/$(project_name).runs/impl_1/chip_top.new.bit
-	$(VIVADO) -mode batch -source ../../common/script/program.tcl -tclargs "xc7a100t_0" $(project_name)/$(project_name).runs/impl_1/chip_top.new.bit
+	$(VIVADO) -mode batch -source ../../common/script/program.tcl -tclargs "xc7a200t_0" $(project_name)/$(project_name).runs/impl_1/chip_top.new.bit
 
 .PHONY: search-ramb bit-update program-updated
 
@@ -227,10 +227,11 @@ $(EXAMPLES):  $(lowrisc_headers) | examples/Makefile
 clean:
 	$(info To clean everything, including the Vivado project, use 'make cleanall')
 	-rm -rf *.log *.jou $(junk)
-	$(MAKE) -C examples clean
+	-$(MAKE) -C examples clean
 
 cleanall: clean
 	-rm -fr $(project)
 	-rm -fr $(project_name)
+	-rm -fr examples
 
 .PHONY: clean cleanall
